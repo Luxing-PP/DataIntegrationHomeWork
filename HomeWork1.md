@@ -2,16 +2,16 @@
 
 # 美团餐饮分析
 
-## 0.小组成员
+# 0.小组成员
 191250009 陈家志
 191250084 林均劼
 191250093 刘庭烽
 191250016 陈梓俊
 191250190 张潮越
 
-## 1.概述
+# 1.概述
 
-## 2.集成逻辑
+# 2.集成逻辑
 
 ​	以美团外卖为例，在美团餐饮系列APP中普遍存在表示集成、数据集成和功能集成
 
@@ -27,9 +27,9 @@
 
 ​	美团外卖中集成了许多其他应用程序的功能，例如：凯立德的地图信息，大众点评查看评价功能，微信/支付宝的支付功能等。美团外卖存在与这些平台的接口调用关系。
 
-## 3.实现机制
+# 3.实现机制
 
-### 3.1 概述 
+## 3.1 概述 
 
 ​    **美团餐饮采取了Web Services技术：**
 
@@ -63,17 +63,17 @@
 
 说出想要识别的内容（此处为“麦当劳”）
 
-<img src="/Users/sangfroidlin/DataIntegrationHomeWork/Images/3.3.2.jpg" alt="3.3.2" style="zoom:30%;" />
+<img src="/Images/3.3.2.jpg" alt="3.3.2" style="zoom:30%;" />
 
 识别后跳转出app搜索内容
 
-<img src="/Users/sangfroidlin/DataIntegrationHomeWork/Images/3.3.3.jpg" alt="3.3.3" style="zoom:30%;" />
+<img src="/Images/3.3.3.jpg" alt="3.3.3" style="zoom:30%;" />
 
 
 
 #### 3.2.4 API细节
 
-##### 1.HTTPS请求地址：https://api-open-cater.meituan.com/speech/asr/v1/sentence_recognize
+**1.HTTPS请求地址：https://api-open-cater.meituan.com/speech/asr/v1/sentence_recognize**
 
 **2.公共请求参数**
 
@@ -143,7 +143,7 @@
   - 手机端页面跳转至指定商家页面
   - 美团通过HTTP请求向后端请求具体菜品数据，并作展示
 
-### 3.3 美团查询门店菜品列表接口
+## 3.3 美团查询门店菜品列表接口
 
 1. 通过请求美团此API实现门店菜品的获取
 
@@ -159,4 +159,4 @@
 <img src="/img/2.png" style="zoom:33%;" />
 
 
-## 4.补充说明
+# 4.补充说明

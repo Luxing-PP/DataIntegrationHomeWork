@@ -1,43 +1,45 @@
+package SinkFunction;
+
+import PO.SdkData;
+import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.jdbc.internal.options.JdbcOptions;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+import org.apache.flink.table.connector.format.EncodingFormat;
 import org.apache.flink.table.data.RowData;
+import org.apache.flink.table.factories.FactoryUtil;
 import ru.yandex.clickhouse.BalancedClickhouseDataSource;
 import ru.yandex.clickhouse.ClickHouseConnection;
 import ru.yandex.clickhouse.ClickHouseStatement;
+import ru.yandex.clickhouse.domain.ClickHouseFormat;
 import ru.yandex.clickhouse.settings.ClickHouseProperties;
 import ru.yandex.clickhouse.settings.ClickHouseQueryParam;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class ClickHouseSinkFunction extends RichSinkFunction<RowData> {
-
+public class ClickHouseSinkFunction extends RichSinkFunction<SdkData> {
     private static final long serialVersionUID = 1L;
 
     private static final String MAX_PARALLEL_REPLICAS_VALUE = "2";
 
-    private final JdbcOptions jdbcOptions;
-    private final SerializationSchema<RowData> serializationSchema;
-
     private ClickHouseConnection conn;
     private ClickHouseStatement stmt;
 
+    public ClickHouseSinkFunction() {
 
-    public ClickHouseSinkFunction(JdbcOptions jdbcOptions, SerializationSchema<RowData> serializationSchema) {
-        this.jdbcOptions = jdbcOptions;
-        this.serializationSchema = serializationSchema;
     }
 
     @Override
     public void open(Configuration parameters) {
         ClickHouseProperties properties = new ClickHouseProperties();
-        properties.setUser(jdbcOptions.getUsername().orElse(null));
-        properties.setPassword(jdbcOptions.getPassword().orElse(null));
         BalancedClickhouseDataSource dataSource;
         try {
             if (null == conn) {
-                dataSource = new BalancedClickhouseDataSource(jdbcOptions.getDbURL(), properties);
+                dataSource = new BalancedClickhouseDataSource("jdbc:clickhouse://124.221.240.155:8123", properties);
                 conn = dataSource.getConnection();
             }
         } catch (SQLException e) {
@@ -46,11 +48,11 @@ public class ClickHouseSinkFunction extends RichSinkFunction<RowData> {
     }
 
     @Override
-    public void invoke(RowData value, Context context) throws Exception {
-        byte[] serialize = serializationSchema.serialize(value);
+    public void invoke(SdkData value, Context context) throws Exception {
+        InputStream result = new ByteArrayInputStream(value.getEventBody().getBytes(StandardCharsets.UTF_8));
+        String sql = value.resolveSql();
         stmt = conn.createStatement();
-//        stmt.write().table(jdbcOptions.getTableName()).data(new ByteArrayInputStream(serialize), ClickHouseFormat.JSONEachRow)
-//                .addDbParam(ClickHouseQueryParam.MAX_PARALLEL_REPLICAS, MAX_PARALLEL_REPLICAS_VALUE).send();
+        stmt.executeQuery(sql);
     }
 
     @Override
@@ -62,5 +64,4 @@ public class ClickHouseSinkFunction extends RichSinkFunction<RowData> {
             conn.close();
         }
     }
-
 }

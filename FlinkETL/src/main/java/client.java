@@ -21,7 +21,7 @@ public class client {
 
         Map<String, String> globalParameters = new HashMap<>();
         // ClickHouse cluster properties
-        globalParameters.put(ClickHouseClusterSettings.CLICKHOUSE_HOSTS, "http://124.221.240.155:8123/");
+        globalParameters.put(ClickHouseClusterSettings.CLICKHOUSE_HOSTS, "http://114.212.241.8:8123/");
         // sink common
         globalParameters.put(ClickHouseSinkConst.TIMEOUT_SEC, "1");
         globalParameters.put(ClickHouseSinkConst.FAILED_RECORDS_PATH, "d:/");

@@ -51,6 +51,7 @@ public class ClickHouseSinkFunction extends RichSinkFunction<SdkData> {
     public void invoke(SdkData value, Context context) throws Exception {
         InputStream result = new ByteArrayInputStream(value.getEventBody().getBytes(StandardCharsets.UTF_8));
         String sql = value.resolveSql();
+//        System.out.println(sql);
         stmt = conn.createStatement();
         stmt.executeQuery(sql);
     }

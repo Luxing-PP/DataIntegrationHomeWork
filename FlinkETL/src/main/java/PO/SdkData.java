@@ -28,7 +28,7 @@ public class SdkData {
     public static String resolveInsertSql(String eventType, Set<Map.Entry<String,Object>> set){
         StringBuffer sb = new StringBuffer();
         StringBuffer keys = new StringBuffer();
-        sb.append("INSERT INTO dm.v_tr_").append(eventType).append("_mx (*) VALUES")
+        sb.append("INSERT INTO dm.dm_v_tr_").append(eventType).append("_mx (*) VALUES")
                 .append("(");
         for(Map.Entry<String,Object> entry: set){
             keys.append(entry.getKey()).append(",");
@@ -45,7 +45,19 @@ public class SdkData {
     }
 
     public String resolveSql(){
+        // 清洗
         JSONObject object = JSONObject.parseObject(eventBody);
+
+        switch (eventType){
+            case "sa":
+                Object key =  object.get("tran_date_date");
+                object.remove("tran_date_date");
+                object.put("tran_date",key);
+                break;
+            default:
+                break;
+        }
+
         return resolveInsertSql(eventType,object.entrySet());
     }
 }

@@ -39,7 +39,7 @@ public class ClickHouseSinkFunction extends RichSinkFunction<SdkData> {
         BalancedClickhouseDataSource dataSource;
         try {
             if (null == conn) {
-                dataSource = new BalancedClickhouseDataSource("jdbc:clickhouse://124.221.240.155:8123", properties);
+                dataSource = new BalancedClickhouseDataSource("jdbc:clickhouse://114.212.241.8:8123", properties);
                 conn = dataSource.getConnection();
             }
         } catch (SQLException e) {
@@ -52,8 +52,14 @@ public class ClickHouseSinkFunction extends RichSinkFunction<SdkData> {
         InputStream result = new ByteArrayInputStream(value.getEventBody().getBytes(StandardCharsets.UTF_8));
         String sql = value.resolveSql();
 //        System.out.println(sql);
-        stmt = conn.createStatement();
-        stmt.executeQuery(sql);
+        try{
+            stmt = conn.createStatement();
+            stmt.executeQuery(sql);
+        }catch (Exception e){
+            System.out.println(sql);
+            e.printStackTrace();
+        }
+
     }
 
     @Override

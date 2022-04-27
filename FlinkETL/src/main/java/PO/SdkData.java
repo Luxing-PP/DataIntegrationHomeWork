@@ -32,7 +32,7 @@ public class SdkData {
                 .append("(");
         for(Map.Entry<String,Object> entry: set){
             keys.append(entry.getKey()).append(",");
-            sb.append('\'').append(entry.getValue().toString()).append("\',");
+            sb.append('\'').append(entry.getValue().toString().replace("\'","")).append("\',");
         }
         keys.deleteCharAt(keys.length()-1);
         sb.deleteCharAt(sb.length()-1);

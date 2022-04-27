@@ -26,7 +26,7 @@ public class ClickHouseSinkFunction extends RichSinkFunction<SdkData> {
 
     private static final String MAX_PARALLEL_REPLICAS_VALUE = "2";
 
-    private ClickHouseConnection conn;
+    protected ClickHouseConnection conn;
     private ClickHouseStatement stmt;
 
     public ClickHouseSinkFunction() {
@@ -57,6 +57,7 @@ public class ClickHouseSinkFunction extends RichSinkFunction<SdkData> {
             stmt.executeQuery(sql);
         }catch (Exception e){
             System.out.println(sql);
+            System.out.println(value.getEventBody());
             e.printStackTrace();
         }
 

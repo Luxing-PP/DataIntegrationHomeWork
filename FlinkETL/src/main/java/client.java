@@ -1,5 +1,6 @@
 import PO.SdkData;
 import SinkFunction.ClickHouseSinkFunction;
+import SinkFunction.MultiThreadSink;
 import com.alibaba.fastjson.JSON;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
@@ -42,9 +43,9 @@ public class client {
         properties.setProperty("bootstrap.servers", "localhost:9092");
         properties.setProperty("group.id", "191250009");
         //第一个参数是topic的名称
-        DataStream<String> inputStream=env.addSource(new FlinkKafkaConsumer<String>("transaction", new SimpleStringSchema(), properties));
+//        DataStream<String> inputStream=env.addSource(new FlinkKafkaConsumer<String>("transaction", new SimpleStringSchema(), properties));
         // source
-//        DataStream<String> inputStream = env.readTextFile("/root/data/record.txt","utf-8");
+        DataStream<String> inputStream = env.readTextFile("/root/data/record.txt","utf-8");
 //        DataStream<String> inputStream = env.readTextFile("D:\\DATA\\DataIntegrate\\record.txt","utf-8");
 //        DataStream<String> inputStream = env.socketTextStream("localhost", 7777);
 
@@ -69,7 +70,8 @@ public class client {
 //        props.put(ClickHouseSinkConst.TARGET_TABLE_NAME, "default.user_table");
 //        props.put(ClickHouseSinkConst.MAX_BUFFER_SIZE, "10000");
 
-        dataStream.addSink(new ClickHouseSinkFunction());
+//        dataStream.addSink(new ClickHouseSinkFunction());
+        dataStream.addSink(new MultiThreadSink());
         dataStream.print();
 
         env.execute("clickhouse sink test");

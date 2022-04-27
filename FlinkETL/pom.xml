@@ -61,8 +61,8 @@
 
         <flink.version>1.13.6</flink.version>
         <scala.binary.version>2.11</scala.binary.version>
-        <scope>provided</scope>
-<!--        <scope>compile</scope>-->
+<!--        <scope>provided</scope>-->
+        <scope>compile</scope>
     </properties>
 
     <dependencies>

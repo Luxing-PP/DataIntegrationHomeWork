@@ -51,27 +51,26 @@ public class client {
         // Transform 操作
         SingleOutputStreamOperator<SdkData> dataStream = inputStream.map((MapFunction<String, SdkData>) input ->{
             input = input.substring(6);
+            SdkData sdkData=null;
             try {
-                SdkData sdkData = JSON.parseObject(input, SdkData.class);
+                sdkData = JSON.parseObject(input, SdkData.class);
                 return sdkData;
             }catch (Exception e){
                 e.printStackTrace();
-                System.err.println(input);
+                System.out.println("err:"+input);
+                System.out.println("body:"+sdkData.getEventBody());
             }
 
             return null;
         });
 
         // create props for sink
-        Properties props = new Properties();
-        props.put(ClickHouseSinkConst.TARGET_TABLE_NAME, "default.user_table");
-        props.put(ClickHouseSinkConst.MAX_BUFFER_SIZE, "10000");
+//        Properties props = new Properties();
+//        props.put(ClickHouseSinkConst.TARGET_TABLE_NAME, "default.user_table");
+//        props.put(ClickHouseSinkConst.MAX_BUFFER_SIZE, "10000");
 
         dataStream.addSink(new ClickHouseSinkFunction());
         dataStream.print();
-//        ClickHouseSink sink = new ClickHouseSink(props);
-//        dataStream.addSink(sink);
-
 
         env.execute("clickhouse sink test");
     }

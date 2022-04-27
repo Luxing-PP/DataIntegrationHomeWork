@@ -2,6 +2,7 @@ import PO.SdkData;
 import SinkFunction.ClickHouseSinkFunction;
 import com.alibaba.fastjson.JSON;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -9,6 +10,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseClusterSettings;
 import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseSinkConst;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +37,14 @@ public class client {
         env.getConfig().setGlobalJobParameters(parameters);
         env.setParallelism(1);
 
+        Properties properties = new Properties();
+        //这里是由一个kafka
+        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("group.id", "191250009");
+        //第一个参数是topic的名称
+        DataStream<String> inputStream=env.addSource(new FlinkKafkaConsumer<String>("transaction", new SimpleStringSchema(), properties));
         // source
-        DataStream<String> inputStream = env.readTextFile("/root/data/record.txt","utf-8");
+//        DataStream<String> inputStream = env.readTextFile("/root/data/record.txt","utf-8");
 //        DataStream<String> inputStream = env.readTextFile("D:\\DATA\\DataIntegrate\\record.txt","utf-8");
 //        DataStream<String> inputStream = env.socketTextStream("localhost", 7777);
 
